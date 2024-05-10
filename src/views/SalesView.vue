@@ -1,5 +1,41 @@
-<script setup></script>
+<script setup>
+import { useGameStore } from '@/stores/gameStore'
+import ListCard from '../components/ListCard.vue'
+import ListElement from '../components/ListElement.vue'
+import { computed } from 'vue'
+
+const gameStore = useGameStore()
+
+const decoratedCommercials = computed(() =>
+  gameStore.commercials.map((commercial) => {
+    return {
+      id: commercial.id,
+      name: commercial.name,
+      cost: commercial.cost,
+      seniority: commercial.seniority,
+      labels: {
+        name: 'Name',
+        cost: 'Cost',
+        seniority: 'Seniority'
+      }
+    }
+  })
+)
+</script>
 
 <template>
-  <h1>Sales</h1>
+  <header>
+    <h1>Sales</h1>
+  </header>
+  <main>
+    <ListCard title="Commercials">
+      <template #elements>
+        <ListElement
+          v-for="commercial in decoratedCommercials"
+          :key="commercial.id"
+          :element="commercial"
+        />
+      </template>
+    </ListCard>
+  </main>
 </template>

@@ -1,21 +1,137 @@
 <script setup>
 import { useGameStore } from '@/stores/gameStore'
+import ListCard from '../components/ListCard.vue'
+import ListElement from '../components/ListElement.vue'
+import { computed, ref } from 'vue'
 
 const gameStore = useGameStore()
+
+const selectedProject = ref(null)
+
+const decoratedDevs = computed(() =>
+  gameStore.devs.map((dev) => {
+    return {
+      id: dev.id,
+      name: dev.name,
+      seniority: dev.seniority,
+      status: dev.isOccupied ? 'Working' : 'Free',
+      workLeft: dev.workLeft ? dev.workLeft : 0,
+      isOccupied: dev.isOccupied,
+      labels: {
+        name: 'Name',
+        seniority: 'Seniority',
+        status: 'Status',
+        workLeft: 'Work Left',
+        isOccupied: 'Occupied'
+      }
+    }
+  })
+)
+
+const decoratedProjects = computed(() =>
+  gameStore.projects.map((project) => {
+    return {
+      id: project.id,
+      name: project.name,
+      value: project.value,
+      complexity: project.complexity,
+      isAssigned: project.isAssigned,
+      labels: {
+        name: 'Name',
+        value: 'Value',
+        complexity: 'Complexity',
+        isAssigned: 'Assigned'
+      }
+    }
+  })
+)
+
+const setSelection = (project) => {
+  selectedProject.value = project
+}
+
+const assignProject = (devId) => {
+  gameStore.assignProjectById(devId, selectedProject.value.id)
+  selectedProject.value = null
+}
 </script>
 
 <template>
-  <h1>Production</h1>
-  <p>Budget: {{ gameStore.budget }}</p>
-  <ul>
-    <li v-for="dev in gameStore.devs" :key="dev.id">
-      {{ dev.getName() }} - {{ dev.getSeniority() }} -
-      {{ dev.getIsOccupied() ? 'Working...' : 'Free' }}
-    </li>
-  </ul>
-  <ul>
-    <li v-for="project in gameStore.projects" :key="project.id">
-      {{ project.getName() }} - {{ project.getComplexity() }} - {{ project.getValue() }}
-    </li>
-  </ul>
+  <header>
+    <h1>Production</h1>
+  </header>
+
+  <main>
+    <h2 class="budget-indicator">
+      Budget:
+      <strong :class="gameStore.budget > 1000 ? 'positive' : 'negative'">{{
+        gameStore.budget
+      }}</strong>
+    </h2>
+
+    <div v-if="selectedProject" class="selected-dev">
+      <h2>Selected Project</h2>
+      <p>Assigning {{ selectedProject.name }}...</p>
+      <button @click="() => (selectedProject = null)">Cancel</button>
+    </div>
+
+    <ListCard class="list-card" title="Developers">
+      <template #elements>
+        <ListElement
+          v-for="dev in decoratedDevs"
+          :key="dev.id"
+          :element="dev"
+          @click="
+            () => {
+              if (!dev.isOccupied && selectedProject) assignProject(dev.id)
+            }
+          "
+        />
+      </template>
+    </ListCard>
+
+    <ListCard class="list-card" title="Projects">
+      <template #elements>
+        <ListElement
+          v-for="project in decoratedProjects"
+          :key="project.id"
+          :element="project"
+          :button="
+            project.isAssigned
+              ? null
+              : { label: 'Assign', onClickFunction: () => setSelection(project) }
+          "
+        />
+      </template>
+    </ListCard>
+  </main>
 </template>
+
+<style scoped>
+.budget-indicator {
+  padding: 1rem;
+  border-radius: 1rem;
+  text-align: center;
+}
+.positive {
+  color: green;
+}
+.negative {
+  color: red;
+}
+
+.list-card {
+  flex: 1;
+}
+
+.selected-dev {
+  position: fixed;
+  bottom: 20%;
+  left: auto;
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: white;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  text-align: center;
+}
+</style>
