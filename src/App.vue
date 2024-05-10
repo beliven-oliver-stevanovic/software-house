@@ -5,7 +5,7 @@ import '@/main.css'
 
 const gameStore = useGameStore()
 
-const dailycosts = 50
+let dailycosts = 50
 
 const gameLoop = setInterval(() => {
   gameStore.workDay
