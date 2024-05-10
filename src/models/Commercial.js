@@ -40,7 +40,6 @@ export default class Commercial extends Employee {
     if (this.searchTime === 0) {
       this.isOccupied = false
       this.foundProject = this.findProject()
-      console.log(this.foundProject)
       return
     }
     this.searchTime -= 1
