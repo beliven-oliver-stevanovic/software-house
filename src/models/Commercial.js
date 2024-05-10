@@ -1,23 +1,48 @@
-import { Personale } from './Personale'
+import Employee from './Employee'
+import Project from './Project'
+import { generateProjectName } from '../utils'
 
-export class Commercial extends Personale {
-  constructor(name, seniority, cost) {
-    super()
-    this.name = name
-    this.seniority = seniority
-    this.cost = cost
-    this.isOccupied = false
+export default class Commercial extends Employee {
+  constructor(name, seniority) {
+    super(name, seniority)
+    this.searchTime = this.setSearchTime()
+    this.foundProject = null
   }
 
-  getSeniority() {
-    return this.seniority
+  setSearchTime() {
+    if (this.seniority === 'Junior') {
+      return 15
+    } else if (this.seniority === 'Mid') {
+      return 10
+    } else if (this.seniority === 'Senior') {
+      return 5
+    }
   }
 
-  getCost() {
-    return this.cost
+  findProject() {
+    let projectName = generateProjectName()
+    let projectValue
+    let projectComplexity = Math.floor(Math.random() * 30) + 10
+
+    if (this.seniority === 'Junior') {
+      projectValue = Math.floor(Math.random() * 100) * projectComplexity
+    } else if (this.seniority === 'Mid') {
+      projectValue = Math.floor(Math.random() * 200) * projectComplexity
+    } else if (this.seniority === 'Senior') {
+      projectValue = Math.floor(Math.random() * 300) * projectComplexity
+    }
+
+    return new Project(projectName, projectValue, projectComplexity)
   }
 
-  getIsOccupied() {
-    return this.isOccupied
+  search() {
+    if (this.foundProject) return
+    if (this.searchTime === 0) {
+      this.isOccupied = false
+      this.foundProject = this.findProject()
+      console.log(this.foundProject)
+      return
+    }
+    this.searchTime -= 1
   }
 }
