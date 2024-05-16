@@ -5,30 +5,19 @@ export default class Employee {
     this.id = uuidv4()
     this.name = name
     this.seniority = seniority
-    this.cost = this.setCost()
-    this.workLeft = 0
+    this.salary = this.seniority.getSalary()
     this.isOccupied = false
   }
 
-  setCost() {
-    if (this.seniority === 'Junior') {
-      return 100
-    } else if (this.seniority === 'Mid') {
-      return 200
-    } else if (this.seniority === 'Senior') {
-      return 300
-    }
-  }
-
-  getworkLeft() {
-    return this.workLeft
-  }
-
-  getCost() {
-    return this.cost
+  getSalary() {
+    return this.salary
   }
 
   getName() {
     return this.name
+  }
+
+  getSeniorityType() {
+    return this.seniority.type
   }
 }

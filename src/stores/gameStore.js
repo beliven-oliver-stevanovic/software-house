@@ -2,12 +2,13 @@ import { defineStore } from 'pinia'
 import Dev from '@/models/Dev'
 import Commercial from '@/models/Commercial'
 import { generateEmployeeName } from '@/utils'
+import JuniorStrategy from '@/models/JuniorStrategy'
 
 export const useGameStore = defineStore('game', {
   state: () => {
     return {
-      devs: [new Dev(generateEmployeeName(), 'Junior')],
-      commercials: [new Commercial(generateEmployeeName(), 'Junior')],
+      devs: [new Dev(generateEmployeeName(), new JuniorStrategy())],
+      commercials: [new Commercial(generateEmployeeName(), new JuniorStrategy())],
       projects: [],
       budget: 5000
     }
@@ -50,17 +51,17 @@ export const useGameStore = defineStore('game', {
         if (commercial.foundProject) {
           this.projects.push(commercial.foundProject)
           commercial.foundProject = null
-          commercial.searchTime = commercial.setSearchTime()
+          commercial.searchTime = commercial.getSearchTime()
         } else {
           commercial.search()
         }
       })
     },
     totalDevSalaries(state) {
-      return state.devs.reduce((acc, dev) => acc + dev.getCost(), 0)
+      return state.devs.reduce((acc, dev) => acc + dev.getSalary(), 0)
     },
     totalCommercialsSalaries(state) {
-      return state.commercials.reduce((acc, commercial) => acc + commercial.getCost(), 0)
+      return state.commercials.reduce((acc, commercial) => acc + commercial.getSalary(), 0)
     },
     totalSalaries() {
       return this.totalDevSalaries + this.totalCommercialsSalaries

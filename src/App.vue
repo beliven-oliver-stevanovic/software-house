@@ -2,23 +2,23 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { useGameStore } from '@/stores/gameStore'
 import '@/main.css'
+import { config } from '@/config.js'
 
 const gameStore = useGameStore()
 
-let dailycosts = 50
+let dailyCost = config.dailyCost
 
 const gameLoop = setInterval(() => {
-  gameStore.workDay
-  gameStore.decreaseBudget(dailycosts)
+  gameStore.decreaseBudget(dailyCost)
   if (gameStore.budget <= 0) {
     gameOver()
   }
-}, 1000)
+}, config.gameLoopInterval)
 
 const salaries = setInterval(() => {
   gameStore.decreaseBudget(gameStore.totalSalaries)
-  dailycosts += dailycosts
-}, 30000)
+  dailyCost += dailyCost
+}, config.salaryInterval)
 
 const gameOver = () => {
   clearInterval(gameLoop)

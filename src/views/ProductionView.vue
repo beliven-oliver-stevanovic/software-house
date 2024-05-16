@@ -3,6 +3,7 @@ import { useGameStore } from '@/stores/gameStore'
 import ListCard from '../components/ListCard.vue'
 import ListElement from '../components/ListElement.vue'
 import { computed, ref } from 'vue'
+import { config } from '@/config.js'
 
 const gameStore = useGameStore()
 
@@ -13,15 +14,17 @@ const decoratedDevs = computed(() =>
     return {
       id: dev.id,
       name: dev.name,
-      seniority: dev.seniority,
-      status: dev.isOccupied ? 'Working' : 'Free',
-      workLeft: dev.workLeft ? dev.workLeft : 0,
+      seniority: dev.seniority.type,
+      status: dev.isOccupied
+        ? config.labels.workStatus.working
+        : config.labels.workStatus.notWorking,
+      workTime: dev.workTime ? dev.workTime : 0,
       isOccupied: dev.isOccupied,
       labels: {
         name: 'Name',
         seniority: 'Seniority',
         status: 'Status',
-        workLeft: 'Work Left',
+        workTime: 'Work Left',
         isOccupied: 'Occupied'
       }
     }
@@ -64,7 +67,7 @@ const assignProject = (devId) => {
   <main>
     <h2 class="budget-indicator">
       Budget:
-      <strong :class="gameStore.budget > 1000 ? 'positive' : 'negative'">{{
+      <strong :class="gameStore.budget > config.alertBudgetLimit ? 'positive' : 'negative'">{{
         gameStore.budget
       }}</strong>
     </h2>

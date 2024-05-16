@@ -6,20 +6,24 @@ import Commercial from '@/models/Commercial'
 import { generateEmployeeName } from '@/utils'
 import ListCard from '../components/ListCard.vue'
 import ListElement from '../components/ListElement.vue'
+import JuniorStrategy from '@/models/JuniorStrategy'
+import MidStrategy from '@/models/MidStrategy'
+import SeniorStrategy from '@/models/SeniorStrategy'
+import { config } from '@/config.js'
 
 const gameStore = useGameStore()
 
 const findCandidate = () => {
   let seniority
   let generator = Math.random()
-  if (generator < 0.5) {
-    seniority = 'Junior'
-  } else if (generator < 0.8) {
-    seniority = 'Mid'
+  if (generator < config.juniorGenerationRate) {
+    seniority = new JuniorStrategy()
+  } else if (generator < config.midGenerationRate) {
+    seniority = new MidStrategy()
   } else {
-    seniority = 'Senior'
+    seniority = new SeniorStrategy()
   }
-  return Math.random() > 0.5
+  return Math.random() > config.devGenerationRate
     ? new Dev(generateEmployeeName(), seniority)
     : new Commercial(generateEmployeeName(), seniority)
 }
@@ -31,9 +35,10 @@ const decoratedCandidates = computed(() =>
     return {
       id: candidate.id,
       name: candidate.name,
-      seniority: candidate.seniority,
-      role: candidate instanceof Dev ? 'Developer' : 'Commercial',
-      cost: candidate.cost,
+      seniority: candidate.seniority.type,
+      role:
+        candidate instanceof Dev ? config.labels.roles.developer : config.labels.roles.commercial,
+      cost: candidate.salary,
       labels: {
         name: 'Name',
         seniority: 'Seniority',
@@ -53,7 +58,7 @@ const onHire = (candidate) => {
 onMounted(() => {
   setInterval(() => {
     candidates.value = [...candidates.value, findCandidate()]
-  }, 20000)
+  }, config.candidateFindingInterval)
 })
 </script>
 
