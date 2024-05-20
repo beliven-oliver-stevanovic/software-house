@@ -3,6 +3,7 @@ import Dev from '@/models/Dev'
 import Commercial from '@/models/Commercial'
 import { generateEmployeeName } from '@/utils'
 import JuniorStrategy from '@/models/JuniorStrategy'
+import { config } from '@/config'
 
 export const useGameStore = defineStore('game', {
   state: () => {
@@ -10,7 +11,11 @@ export const useGameStore = defineStore('game', {
       devs: [new Dev(generateEmployeeName(), new JuniorStrategy())],
       commercials: [new Commercial(generateEmployeeName(), new JuniorStrategy())],
       projects: [],
-      budget: 5000
+      budget: config.initialBudget,
+      highestBudgetPeak: config.initialBudget,
+      timePassed: 0,
+      playerId: 1,
+      isGameStarted: false
     }
   },
 
@@ -35,16 +40,16 @@ export const useGameStore = defineStore('game', {
     },
     increaseBudget(amount) {
       this.budget += amount
+      if (this.budget > this.highestBudgetPeak) {
+        this.highestBudgetPeak = this.budget
+      }
     },
     assignProjectById(devId, projectId) {
       let dev = this.devs.find((dev) => dev.id === devId)
       let project = this.projects.find((project) => project.id === projectId)
       project.isAssigned = true
       dev.assignProject(project)
-    }
-  },
-
-  getters: {
+    },
     workDay() {
       this.devs.forEach((dev) => dev.work())
       this.commercials.forEach((commercial) => {
@@ -56,7 +61,11 @@ export const useGameStore = defineStore('game', {
           commercial.search()
         }
       })
-    },
+      this.timePassed++
+    }
+  },
+
+  getters: {
     totalDevSalaries(state) {
       return state.devs.reduce((acc, dev) => acc + dev.getSalary(), 0)
     },

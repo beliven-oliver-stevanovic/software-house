@@ -4,8 +4,14 @@ import ListCard from '../components/ListCard.vue'
 import ListElement from '../components/ListElement.vue'
 import { computed, ref } from 'vue'
 import { config } from '@/config.js'
+import NavBar from '@/components/NavBar.vue'
+import { useRouter } from 'vue-router'
 
 const gameStore = useGameStore()
+
+const router = useRouter()
+
+let dailyCost = config.dailyCost
 
 const selectedProject = ref(null)
 
@@ -57,6 +63,52 @@ const assignProject = (devId) => {
   gameStore.assignProjectById(devId, selectedProject.value.id)
   selectedProject.value = null
 }
+
+let gameLoop, salaries
+
+gameLoop = setInterval(async () => {
+  gameStore.decreaseBudget(dailyCost)
+  if (gameStore.budget <= 0) {
+    await gameOver()
+  }
+}, config.gameLoopInterval)
+
+salaries = setInterval(() => {
+  gameStore.decreaseBudget(gameStore.totalSalaries)
+  dailyCost += dailyCost
+}, config.salaryInterval)
+
+gameStore.isGameStarted = true
+
+const gameOver = async () => {
+  clearInterval(gameLoop)
+  clearInterval(salaries)
+  console.log(gameStore.timePassed)
+  await fetch('http://localhost:8000/games', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      time_passed: gameStore.timePassed,
+      max_budget: gameStore.highestBudgetPeak,
+      player_id: gameStore.playerId
+    })
+  })
+    .then((response) => {
+      return response.json()
+    })
+    .then((data) => {
+      console.log('Success:', data)
+      clearInterval(gameLoop)
+      clearInterval(salaries)
+      alert('Game Over')
+      router.push('/')
+    })
+    .catch((error) => {
+      console.error('Error:', error)
+    })
+}
 </script>
 
 <template>
@@ -107,6 +159,7 @@ const assignProject = (devId) => {
         />
       </template>
     </ListCard>
+    <NavBar />
   </main>
 </template>
 

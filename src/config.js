@@ -2,7 +2,7 @@ export const config = {
   gameLoopInterval: 1000,
   salaryInterval: 30000,
   candidateFindingInterval: 20000,
-  initialBudget: 5000,
+  initialBudget: 500,
   alertBudgetLimit: 1000,
   dailyCost: 50,
   juniorSalary: 100,

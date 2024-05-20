@@ -3,6 +3,7 @@ import { useGameStore } from '@/stores/gameStore'
 import ListCard from '../components/ListCard.vue'
 import ListElement from '../components/ListElement.vue'
 import { computed } from 'vue'
+import NavBar from '@/components/NavBar.vue'
 
 const gameStore = useGameStore()
 
@@ -37,5 +38,6 @@ const decoratedCommercials = computed(() =>
         />
       </template>
     </ListCard>
+    <NavBar />
   </main>
 </template>

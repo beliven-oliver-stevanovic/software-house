@@ -48,7 +48,8 @@ button {
   border: none;
   border-radius: 0.25rem;
   margin: 1rem;
-  background-color: gray;
-  color: white;
+  background-color: #f0f0f0;
+  color: #000;
   cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }

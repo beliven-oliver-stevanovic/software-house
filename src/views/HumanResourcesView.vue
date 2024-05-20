@@ -10,6 +10,7 @@ import JuniorStrategy from '@/models/JuniorStrategy'
 import MidStrategy from '@/models/MidStrategy'
 import SeniorStrategy from '@/models/SeniorStrategy'
 import { config } from '@/config.js'
+import NavBar from '../components/NavBar.vue'
 
 const gameStore = useGameStore()
 
@@ -78,5 +79,6 @@ onMounted(() => {
         />
       </template>
     </ListCard>
+    <NavBar />
   </main>
 </template>
