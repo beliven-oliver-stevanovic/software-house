@@ -41,3 +41,9 @@ const decoratedCommercials = computed(() =>
     <NavBar />
   </main>
 </template>
+
+<style scoped>
+main {
+  overflow: scroll;
+}
+</style>

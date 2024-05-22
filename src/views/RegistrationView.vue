@@ -35,16 +35,16 @@ const register = async () => {
 
   <main>
     <form @submit.prevent="register">
+      <h3>Welcome to Software house Tycoon!</h3>
       <span>
-        <label for="name">Insert your player name:</label>
-        <input type="name" id="name" v-model="name" />
+        <input type="name" id="name" v-model="name" placeholder="Player name" />
       </span>
       <button type="submit">Play!</button>
     </form>
   </main>
 </template>
 
-<style>
+<style scoped>
 form {
   display: flex;
   flex-direction: column;
@@ -58,9 +58,16 @@ span {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  width: 70%;
+}
+
+input {
+  width: 100%;
 }
 
 button {
   width: 40%;
+  background-color: green;
+  color: white;
 }
 </style>

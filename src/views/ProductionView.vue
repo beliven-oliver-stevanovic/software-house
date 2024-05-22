@@ -2,52 +2,66 @@
 import { useGameStore } from '@/stores/gameStore'
 import ListCard from '../components/ListCard.vue'
 import ListElement from '../components/ListElement.vue'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { config } from '@/config.js'
 import NavBar from '@/components/NavBar.vue'
 
 const gameStore = useGameStore()
 
 const selectedProject = ref(null)
+let budgetIncreased = ref(false)
 
 const decoratedDevs = computed(() =>
   gameStore.devs.map((dev) => {
-    return {
-      id: dev.id,
-      name: dev.name,
-      seniority: dev.seniority.type,
-      status: dev.isOccupied
-        ? config.labels.workStatus.working
-        : config.labels.workStatus.notWorking,
-      workTime: dev.workTime ? dev.workTime : 0,
-      isOccupied: dev.isOccupied,
-      labels: {
-        name: 'Name',
-        seniority: 'Seniority',
-        status: 'Status',
-        workTime: 'Work Left',
-        isOccupied: 'Occupied'
+    if (dev.isOccupied) {
+      return {
+        id: dev.id,
+        name: dev.name,
+        seniority: dev.seniority.type,
+        workTime: dev.workTime ? dev.workTime : 0,
+        labels: {
+          name: 'Name',
+          seniority: 'Seniority',
+          status: 'Status',
+          workTime: 'Work Left'
+        }
+      }
+    } else {
+      return {
+        id: dev.id,
+        name: dev.name,
+        seniority: dev.seniority.type,
+        status: dev.isOccupied
+          ? config.labels.workStatus.working
+          : config.labels.workStatus.notWorking,
+        labels: {
+          name: 'Name',
+          seniority: 'Seniority',
+          status: 'Status'
+        }
       }
     }
   })
 )
 
 const decoratedProjects = computed(() =>
-  gameStore.projects.map((project) => {
-    return {
-      id: project.id,
-      name: project.name,
-      value: project.value,
-      complexity: project.complexity,
-      isAssigned: project.isAssigned,
-      labels: {
-        name: 'Name',
-        value: 'Value',
-        complexity: 'Complexity',
-        isAssigned: 'Assigned'
+  gameStore.projects
+    .filter((project) => !project.isAssigned)
+    .map((project) => {
+      if (!project.isAssigned) {
+        return {
+          id: project.id,
+          name: project.name,
+          value: project.value,
+          complexity: project.complexity,
+          labels: {
+            name: 'Name',
+            value: 'Value',
+            complexity: 'Complexity'
+          }
+        }
       }
-    }
-  })
+    })
 )
 
 const setSelection = (project) => {
@@ -58,6 +72,18 @@ const assignProject = (devId) => {
   gameStore.assignProjectById(devId, selectedProject.value.id)
   selectedProject.value = null
 }
+
+watch(
+  () => gameStore.budget,
+  (newBudget, oldBudget) => {
+    if (newBudget > oldBudget) {
+      budgetIncreased.value = true
+      setTimeout(() => {
+        budgetIncreased.value = false
+      }, 1000)
+    }
+  }
+)
 </script>
 
 <template>
@@ -71,6 +97,9 @@ const assignProject = (devId) => {
       <strong :class="gameStore.budget > config.alertBudgetLimit ? 'positive' : 'negative'">{{
         gameStore.budget
       }}</strong>
+      <Transition name="slide-fade">
+        <span class="positive" v-if="budgetIncreased">+</span>
+      </Transition>
     </h2>
 
     <div v-if="selectedProject" class="selected-dev">
@@ -134,9 +163,8 @@ const assignProject = (devId) => {
 
 .selected-dev {
   position: fixed;
-  bottom: 20%;
+  bottom: 12%;
   left: auto;
-  padding: 1rem;
   border-radius: 1rem;
   background-color: white;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
@@ -152,5 +180,19 @@ const assignProject = (devId) => {
   width: 100vw;
   gap: 1rem;
   padding: 0.3rem;
+}
+
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
 }
 </style>

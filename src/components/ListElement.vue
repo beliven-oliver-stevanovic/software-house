@@ -26,8 +26,8 @@ defineProps({
 
 <style scoped>
 li {
-  margin-bottom: 1rem;
-  background-color: gainsboro;
+  margin-bottom: 0.5rem;
+  background-color: #f0f0f0;
 }
 .container {
   display: flex;
@@ -35,5 +35,8 @@ li {
   align-items: start;
   border-radius: 20px;
   border: 1px solid black;
+}
+div {
+  margin: 0 auto;
 }
 </style>
