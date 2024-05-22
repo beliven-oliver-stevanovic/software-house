@@ -3,6 +3,8 @@ import Dev from '@/models/Dev'
 import Commercial from '@/models/Commercial'
 import { generateEmployeeName } from '@/utils'
 import JuniorStrategy from '@/models/JuniorStrategy'
+import MidStrategy from '@/models/MidStrategy'
+import SeniorStrategy from '@/models/SeniorStrategy'
 import { config } from '@/config'
 
 export const useGameStore = defineStore('game', {
@@ -11,11 +13,15 @@ export const useGameStore = defineStore('game', {
       devs: [new Dev(generateEmployeeName(), new JuniorStrategy())],
       commercials: [new Commercial(generateEmployeeName(), new JuniorStrategy())],
       projects: [],
+      candidates: [],
       budget: config.initialBudget,
       highestBudgetPeak: config.initialBudget,
       timePassed: 0,
       playerId: 1,
-      isGameStarted: false
+      isGameStarted: false,
+      dailyCost: config.dailyCost,
+      hireTimer: config.hireTimer,
+      salariesTimer: config.salariesTimer
     }
   },
 
@@ -32,10 +38,11 @@ export const useGameStore = defineStore('game', {
     },
     completeProject(projectId) {
       let completed = this.projects.find((project) => project.id !== projectId)
-      this.budget += completed.value
+      this.increaseBudget(completed.value)
       this.projects = this.projects.filter((project) => project.id !== projectId)
     },
-    decreaseBudget(amount) {
+    decreaseBudget(amount = 0) {
+      this.budget -= this.dailyCost
       this.budget -= amount
     },
     increaseBudget(amount) {
@@ -71,6 +78,26 @@ export const useGameStore = defineStore('game', {
       this.highestBudgetPeak = config.initialBudget
       this.timePassed = 0
       this.playerId = -1
+      this.dailyCost = config.dailyCost
+      this.hireTimer = config.hireTimer
+      this.salariesTimer = config.salariesTimer
+    },
+    findCandidate() {
+      let seniority
+      let generator = Math.random()
+      if (generator < config.juniorGenerationRate) {
+        seniority = new JuniorStrategy()
+      } else if (generator < config.midGenerationRate) {
+        seniority = new MidStrategy()
+      } else {
+        seniority = new SeniorStrategy()
+      }
+      this.candidates = [
+        ...this.candidates,
+        Math.random() > config.devGenerationRate
+          ? new Dev(generateEmployeeName(), seniority)
+          : new Commercial(generateEmployeeName(), seniority)
+      ]
     }
   },
 

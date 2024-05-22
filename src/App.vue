@@ -9,25 +9,29 @@ const gameStore = useGameStore()
 
 const router = useRouter()
 
-let dailyCost = config.dailyCost
-
 setInterval(async () => {
   console.log('started:', gameStore.isGameStarted)
   if (gameStore.isGameStarted) {
-    gameStore.decreaseBudget(dailyCost)
+    gameStore.decreaseBudget()
     gameStore.workDay()
     if (gameStore.budget <= 0) {
       await gameOver()
     }
+    if (gameStore.hireTimer == 0) {
+      console.log('find candidate')
+      gameStore.findCandidate()
+      gameStore.hireTimer = config.hireTimer
+    }
+    if (gameStore.salariesTimer == 0) {
+      console.log('decrease salaries')
+      gameStore.decreaseBudget(gameStore.totalSalaries)
+      gameStore.dailyCost += gameStore.dailyCost
+      gameStore.salariesTimer = config.salariesTimer
+    }
+    gameStore.hireTimer--
+    gameStore.salariesTimer--
   }
 }, config.gameLoopInterval)
-
-setInterval(() => {
-  if (gameStore.isGameStarted) {
-    gameStore.decreaseBudget(gameStore.totalSalaries)
-    dailyCost += dailyCost
-  }
-}, config.salaryInterval)
 
 const gameOver = async () => {
   gameStore.isGameStarted = false

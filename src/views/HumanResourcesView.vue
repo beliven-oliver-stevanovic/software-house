@@ -1,38 +1,16 @@
 <script setup>
 import { useGameStore } from '@/stores/gameStore'
-import { onMounted, ref, computed } from 'vue'
+import { computed } from 'vue'
 import Dev from '@/models/Dev'
-import Commercial from '@/models/Commercial'
-import { generateEmployeeName } from '@/utils'
 import ListCard from '../components/ListCard.vue'
 import ListElement from '../components/ListElement.vue'
-import JuniorStrategy from '@/models/JuniorStrategy'
-import MidStrategy from '@/models/MidStrategy'
-import SeniorStrategy from '@/models/SeniorStrategy'
 import { config } from '@/config.js'
 import NavBar from '../components/NavBar.vue'
 
 const gameStore = useGameStore()
 
-const findCandidate = () => {
-  let seniority
-  let generator = Math.random()
-  if (generator < config.juniorGenerationRate) {
-    seniority = new JuniorStrategy()
-  } else if (generator < config.midGenerationRate) {
-    seniority = new MidStrategy()
-  } else {
-    seniority = new SeniorStrategy()
-  }
-  return Math.random() > config.devGenerationRate
-    ? new Dev(generateEmployeeName(), seniority)
-    : new Commercial(generateEmployeeName(), seniority)
-}
-
-const candidates = ref([findCandidate(), findCandidate()])
-
 const decoratedCandidates = computed(() =>
-  candidates.value.map((candidate) => {
+  gameStore.candidates.map((candidate) => {
     return {
       id: candidate.id,
       name: candidate.name,
@@ -51,16 +29,10 @@ const decoratedCandidates = computed(() =>
 )
 
 const onHire = (candidate) => {
-  let toHire = candidates.value.find((c) => c.id === candidate.id)
+  let toHire = gameStore.candidates.find((c) => c.id === candidate.id)
   gameStore.hireCandidate(toHire)
-  candidates.value = candidates.value.filter((c) => c.id !== candidate.id)
+  gameStore.candidates = gameStore.candidates.filter((c) => c.id !== candidate.id)
 }
-
-onMounted(() => {
-  setInterval(() => {
-    candidates.value = [...candidates.value, findCandidate()]
-  }, config.candidateFindingInterval)
-})
 </script>
 
 <template>
@@ -82,3 +54,9 @@ onMounted(() => {
     <NavBar />
   </main>
 </template>
+
+<style scoped>
+main {
+  overflow: scroll;
+}
+</style>
