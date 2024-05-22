@@ -5,13 +5,8 @@ import ListElement from '../components/ListElement.vue'
 import { computed, ref } from 'vue'
 import { config } from '@/config.js'
 import NavBar from '@/components/NavBar.vue'
-import { useRouter } from 'vue-router'
 
 const gameStore = useGameStore()
-
-const router = useRouter()
-
-let dailyCost = config.dailyCost
 
 const selectedProject = ref(null)
 
@@ -63,52 +58,6 @@ const assignProject = (devId) => {
   gameStore.assignProjectById(devId, selectedProject.value.id)
   selectedProject.value = null
 }
-
-let gameLoop, salaries
-
-gameLoop = setInterval(async () => {
-  gameStore.decreaseBudget(dailyCost)
-  if (gameStore.budget <= 0) {
-    await gameOver()
-  }
-}, config.gameLoopInterval)
-
-salaries = setInterval(() => {
-  gameStore.decreaseBudget(gameStore.totalSalaries)
-  dailyCost += dailyCost
-}, config.salaryInterval)
-
-gameStore.isGameStarted = true
-
-const gameOver = async () => {
-  clearInterval(gameLoop)
-  clearInterval(salaries)
-  console.log(gameStore.timePassed)
-  await fetch('http://localhost:8000/games', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      time_passed: gameStore.timePassed,
-      max_budget: gameStore.highestBudgetPeak,
-      player_id: gameStore.playerId
-    })
-  })
-    .then((response) => {
-      return response.json()
-    })
-    .then((data) => {
-      console.log('Success:', data)
-      clearInterval(gameLoop)
-      clearInterval(salaries)
-      alert('Game Over')
-      router.push('/')
-    })
-    .catch((error) => {
-      console.error('Error:', error)
-    })
-}
 </script>
 
 <template>
@@ -130,42 +79,45 @@ const gameOver = async () => {
       <button @click="() => (selectedProject = null)">Cancel</button>
     </div>
 
-    <ListCard class="list-card" title="Developers">
-      <template #elements>
-        <ListElement
-          v-for="dev in decoratedDevs"
-          :key="dev.id"
-          :element="dev"
-          @click="
-            () => {
-              if (!dev.isOccupied && selectedProject) assignProject(dev.id)
-            }
-          "
-        />
-      </template>
-    </ListCard>
+    <div class="list-container">
+      <ListCard class="list-card" title="Developers">
+        <template #elements>
+          <ListElement
+            v-for="dev in decoratedDevs"
+            :key="dev.id"
+            :element="dev"
+            @click="
+              () => {
+                if (!dev.isOccupied && selectedProject) assignProject(dev.id)
+              }
+            "
+          />
+        </template>
+      </ListCard>
 
-    <ListCard class="list-card" title="Projects">
-      <template #elements>
-        <ListElement
-          v-for="project in decoratedProjects"
-          :key="project.id"
-          :element="project"
-          :button="
-            project.isAssigned
-              ? null
-              : { label: 'Assign', onClickFunction: () => setSelection(project) }
-          "
-        />
-      </template>
-    </ListCard>
+      <ListCard class="list-card" title="Projects">
+        <template #elements>
+          <ListElement
+            v-for="project in decoratedProjects"
+            :key="project.id"
+            :element="project"
+            :button="
+              project.isAssigned
+                ? null
+                : { label: 'Assign', onClickFunction: () => setSelection(project) }
+            "
+          />
+        </template>
+      </ListCard>
+    </div>
+
     <NavBar />
   </main>
 </template>
 
 <style scoped>
 .budget-indicator {
-  padding: 1rem;
+  padding: 0.5rem;
   border-radius: 1rem;
   text-align: center;
 }
@@ -177,7 +129,7 @@ const gameOver = async () => {
 }
 
 .list-card {
-  flex: 1;
+  height: fit-content;
 }
 
 .selected-dev {
@@ -189,5 +141,16 @@ const gameOver = async () => {
   background-color: white;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   text-align: center;
+}
+
+.list-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-evenly;
+  align-content: start;
+  overflow: scroll;
+  width: 100vw;
+  gap: 1rem;
+  padding: 0.3rem;
 }
 </style>

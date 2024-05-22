@@ -11,26 +11,29 @@ defineProps({
 </script>
 
 <template>
-  <li>
-    <div class="container">
-      <span v-for="(value, key) in element" :key="key">
-        <p v-if="key != 'id' && key != 'labels'">
-          <strong>{{ element.labels[key] }}</strong
-          >: {{ value }}
-        </p>
-      </span>
+  <li class="container">
+    <span v-for="(value, key) in element" :key="key">
+      <p v-if="key != 'id' && key != 'labels'">
+        <strong>{{ element.labels[key] }}</strong
+        >: {{ value }}
+      </p>
+    </span>
+    <div>
       <button v-if="button" @click="button.onClickFunction()">{{ button.label }}</button>
     </div>
-    <hr />
   </li>
 </template>
 
 <style scoped>
+li {
+  margin-bottom: 1rem;
+  background-color: gainsboro;
+}
 .container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin: 0.5rem;
+  align-items: start;
   border-radius: 20px;
+  border: 1px solid black;
 }
 </style>
