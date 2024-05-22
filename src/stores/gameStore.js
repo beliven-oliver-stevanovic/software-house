@@ -61,7 +61,16 @@ export const useGameStore = defineStore('game', {
           commercial.search()
         }
       })
-      this.timePassed++
+      this.timePassed = this.timePassed + 1
+    },
+    resetStats() {
+      this.devs = [new Dev(generateEmployeeName(), new JuniorStrategy())]
+      this.commercials = [new Commercial(generateEmployeeName(), new JuniorStrategy())]
+      this.projects = []
+      this.budget = config.initialBudget
+      this.highestBudgetPeak = config.initialBudget
+      this.timePassed = 0
+      this.playerId = -1
     }
   },
 

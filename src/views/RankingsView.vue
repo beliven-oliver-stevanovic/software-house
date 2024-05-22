@@ -1,8 +1,12 @@
 <script setup>
+import { useGameStore } from '@/stores/gameStore'
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const rankings = ref([])
 const isByBudget = ref(true)
+const router = useRouter()
+const gameStore = useGameStore()
 
 onMounted(async () => {
   getRankingsByBudget()
@@ -20,6 +24,11 @@ const getRankingsByTime = async () => {
   rankings.value = await response.json()
   isByBudget.value = false
   console.log(rankings.value)
+}
+
+const restartGame = () => {
+  gameStore.resetStats()
+  router.push('/')
 }
 </script>
 
@@ -44,6 +53,7 @@ const getRankingsByTime = async () => {
         }}
       </li>
     </ul>
+    <button @click="restartGame()">Restart game</button>
   </main>
 </template>
 

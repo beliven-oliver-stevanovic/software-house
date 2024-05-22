@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useGameStore } from '@/stores/gameStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,6 +30,19 @@ const router = createRouter({
       component: () => import('../views/RankingsView.vue')
     }
   ]
+})
+
+let whiteList = ['register']
+
+router.beforeEach((to, from, next) => {
+  const gameStore = useGameStore()
+  if (whiteList.includes(to.name)) {
+    next()
+  } else if (gameStore.isGameStarted) {
+    next()
+  } else {
+    next({ name: 'register' })
+  }
 })
 
 export default router

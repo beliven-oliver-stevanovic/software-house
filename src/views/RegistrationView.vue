@@ -18,6 +18,8 @@ const register = async () => {
     .then((data) => {
       console.log('Success:', data)
       gameStore.playerId = data.id
+      gameStore.isGameStarted = true
+
       router.push('/production')
     })
     .catch((error) => {
@@ -27,13 +29,38 @@ const register = async () => {
 </script>
 
 <template>
-  <h1>Register</h1>
+  <header>
+    <h1>Register</h1>
+  </header>
 
-  <form @submit.prevent="register">
-    <div>
-      <label for="name">Name</label>
-      <input type="name" id="name" v-model="name" />
-    </div>
-    <button type="submit">Register</button>
-  </form>
+  <main>
+    <form @submit.prevent="register">
+      <span>
+        <label for="name">Insert your player name:</label>
+        <input type="name" id="name" v-model="name" />
+      </span>
+      <button type="submit">Play!</button>
+    </form>
+  </main>
 </template>
+
+<style>
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 3rem;
+  gap: 2rem;
+}
+
+span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+button {
+  width: 40%;
+}
+</style>
