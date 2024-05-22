@@ -32,7 +32,7 @@ const router = createRouter({
   ]
 })
 
-let whiteList = ['register']
+let whiteList = ['register', 'rankings']
 
 router.beforeEach((to, from, next) => {
   const gameStore = useGameStore()
