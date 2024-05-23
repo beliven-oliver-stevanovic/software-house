@@ -1,6 +1,6 @@
 export const config = {
   gameLoopInterval: 1000,
-  hireTimer: 15,
+  hireTimer: 5,
   salariesTimer: 30,
   candidateFindingInterval: 20000,
   initialBudget: 5000,

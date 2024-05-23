@@ -24,8 +24,8 @@ div {
   align-items: center;
   padding: 0.5rem;
   background-color: white;
-  border: 1px solid black;
   border-radius: 1rem;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 ul {

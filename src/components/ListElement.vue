@@ -19,22 +19,22 @@ defineProps({
       </p>
     </span>
     <div>
-      <button v-if="button" @click="button.onClickFunction()">{{ button.label }}</button>
+      <button v-if="button" @click="button.onClickFunction()">
+        {{ button.label }}
+      </button>
     </div>
   </li>
 </template>
 
 <style scoped>
-li {
-  margin-bottom: 0.5rem;
-  background-color: #f0f0f0;
-}
 .container {
   display: flex;
   flex-direction: column;
   align-items: start;
   border-radius: 20px;
-  border: 1px solid black;
+  margin-bottom: 0.8rem;
+  background-color: whitesmoke;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 div {
   margin: 0 auto;

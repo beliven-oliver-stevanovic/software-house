@@ -158,7 +158,9 @@ watch(
 }
 
 .list-card {
+  max-height: 100%;
   height: fit-content;
+  overflow-y: scroll;
 }
 
 .selected-dev {
@@ -176,10 +178,11 @@ watch(
   grid-template-columns: 1fr 1fr;
   justify-content: space-evenly;
   align-content: start;
-  overflow: scroll;
   width: 100vw;
+  height: 100%;
   gap: 1rem;
-  padding: 0.3rem;
+  padding: 0.8rem;
+  overflow: scroll;
 }
 
 .slide-fade-enter-active {

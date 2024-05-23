@@ -1,8 +1,7 @@
 <script setup>
-import { RouterView } from 'vue-router'
+import { RouterView, useRouter } from 'vue-router'
 import '@/main.css'
 import { useGameStore } from '@/stores/gameStore'
-import { useRouter } from 'vue-router'
 import { config } from '@/config.js'
 
 const gameStore = useGameStore()
