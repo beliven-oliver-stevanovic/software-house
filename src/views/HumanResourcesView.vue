@@ -4,8 +4,9 @@ import { computed } from 'vue'
 import Dev from '@/models/Dev'
 import ListCard from '../components/ListCard.vue'
 import ListElement from '../components/ListElement.vue'
-import { config } from '@/config.js'
+import { labels } from '@/config.js'
 import NavBar from '../components/NavBar.vue'
+import HeaderComponent from '@/components/HeaderComponent.vue'
 
 const gameStore = useGameStore()
 
@@ -15,8 +16,7 @@ const decoratedCandidates = computed(() =>
       id: candidate.id,
       name: candidate.name,
       seniority: candidate.seniority.type,
-      role:
-        candidate instanceof Dev ? config.labels.roles.developer : config.labels.roles.commercial,
+      role: candidate instanceof Dev ? labels.roles.developer : labels.roles.commercial,
       cost: candidate.salary,
       labels: {
         name: 'Name',
@@ -36,12 +36,10 @@ const onHire = (candidate) => {
 </script>
 
 <template>
-  <header>
-    <h1>HR</h1>
-  </header>
+  <HeaderComponent> HR </HeaderComponent>
 
   <main>
-    <ListCard title="Candidates">
+    <ListCard class="list-card" title="Candidates">
       <template #elements>
         <ListElement
           v-for="candidate in decoratedCandidates"
@@ -58,5 +56,10 @@ const onHire = (candidate) => {
 <style scoped>
 main {
   overflow: scroll;
+}
+
+.list-card {
+  margin: 0 auto;
+  width: 90%;
 }
 </style>

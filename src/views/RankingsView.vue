@@ -1,7 +1,9 @@
 <script setup>
+import { baseAPIUrl } from '@/config'
 import { useGameStore } from '@/stores/gameStore'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { postOne } from '@/server'
 
 const rankings = ref([])
 const isByBudget = ref(true)
@@ -13,22 +15,32 @@ onMounted(async () => {
 })
 
 const getRankingsByBudget = async () => {
-  const response = await fetch(`http://localhost:8000/games/ranking/max_budget`)
+  const response = await fetch(`${baseAPIUrl}/games/ranking/max_budget`)
   rankings.value = await response.json()
   isByBudget.value = true
-  console.log(rankings.value)
 }
 
 const getRankingsByTime = async () => {
-  const response = await fetch(`http://localhost:8000/games/ranking/time_passed`)
+  const response = await fetch(`${baseAPIUrl}/games/ranking/time_passed`)
   rankings.value = await response.json()
   isByBudget.value = false
-  console.log(rankings.value)
 }
 
-const restartGame = () => {
+const restartGame = async () => {
   gameStore.resetStats()
-  router.push('/')
+  await postOne('games', {
+    time_passed: gameStore.timePassed,
+    max_budget: gameStore.highestBudgetPeak,
+    player_id: gameStore.playerId,
+    budget: gameStore.budget,
+    status: JSON.stringify(gameStore.gameStatus)
+  }).then((data) => {
+    gameStore.id = data.id
+    gameStore.isGameStarted = true
+    router.push({
+      name: 'production'
+    })
+  })
 }
 </script>
 

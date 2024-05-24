@@ -2,14 +2,14 @@
 import { RouterView, useRouter } from 'vue-router'
 import '@/main.css'
 import { useGameStore } from '@/stores/gameStore'
-import { config } from '@/config.js'
+import { hireTimer, salariesTimer, gameLoopInterval } from '@/config.js'
+import { patchOne } from './server'
 
 const gameStore = useGameStore()
 
 const router = useRouter()
 
 setInterval(async () => {
-  console.log('started:', gameStore.isGameStarted)
   if (gameStore.isGameStarted) {
     gameStore.decreaseBudget()
     gameStore.workDay()
@@ -17,45 +17,30 @@ setInterval(async () => {
       await gameOver()
     }
     if (gameStore.hireTimer == 0) {
-      console.log('find candidate')
       gameStore.findCandidate()
-      gameStore.hireTimer = config.hireTimer
+      gameStore.hireTimer = hireTimer
     }
     if (gameStore.salariesTimer == 0) {
-      console.log('decrease salaries')
       gameStore.decreaseBudget(gameStore.totalSalaries)
       gameStore.dailyCost += gameStore.dailyCost
-      gameStore.salariesTimer = config.salariesTimer
+      gameStore.salariesTimer = salariesTimer
     }
     gameStore.hireTimer--
     gameStore.salariesTimer--
   }
-}, config.gameLoopInterval)
+}, gameLoopInterval)
 
 const gameOver = async () => {
   gameStore.isGameStarted = false
-  await fetch('http://localhost:8000/games', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      time_passed: gameStore.timePassed,
-      max_budget: gameStore.highestBudgetPeak,
-      player_id: gameStore.playerId
-    })
+  await patchOne('games', gameStore.id, {
+    time_passed: gameStore.timePassed,
+    max_budget: gameStore.highestBudgetPeak,
+    player_id: gameStore.playerId,
+    budget: gameStore.budget,
+    status: JSON.stringify(gameStore.gameStatus)
   })
-    .then((response) => {
-      return response.json()
-    })
-    .then((data) => {
-      console.log('Success:', data)
-      alert('Game Over')
-      router.push('/rankings')
-    })
-    .catch((error) => {
-      console.error('Error:', error)
-    })
+  alert('Game Over')
+  router.push('/rankings')
 }
 </script>
 

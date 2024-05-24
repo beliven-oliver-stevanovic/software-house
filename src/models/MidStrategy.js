@@ -1,21 +1,21 @@
 import SeniorityStrategy from './SeniorityStrategy'
-import { config } from '@/config.js'
+import { midSearchTime, midSalary, midProjectDifficultyRate, labels } from '@/config.js'
 
 export default class MidStrategy extends SeniorityStrategy {
   constructor() {
     super()
-    this.type = config.labels.seniority.mid
+    this.type = labels.seniority.mid
   }
 
   getSearchTime() {
-    return config.midSearchTime
+    return midSearchTime
   }
 
   getWorkTime(project) {
-    return Math.floor(project.complexity / config.midProjectDifficultyRate)
+    return Math.floor(project.complexity / midProjectDifficultyRate)
   }
 
   getSalary() {
-    return config.midSalary
+    return midSalary
   }
 }
