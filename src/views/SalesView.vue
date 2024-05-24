@@ -4,6 +4,7 @@ import ListCard from '../components/ListCard.vue'
 import ListElement from '../components/ListElement.vue'
 import { computed } from 'vue'
 import NavBar from '@/components/NavBar.vue'
+import HeaderComponent from '@/components/HeaderComponent.vue'
 
 const gameStore = useGameStore()
 
@@ -25,11 +26,9 @@ const decoratedCommercials = computed(() =>
 </script>
 
 <template>
-  <header>
-    <h1>Sales</h1>
-  </header>
+  <HeaderComponent> Sales </HeaderComponent>
   <main>
-    <ListCard title="Commercials">
+    <ListCard class="list-card" title="Commercials">
       <template #elements>
         <ListElement
           v-for="commercial in decoratedCommercials"
@@ -45,5 +44,10 @@ const decoratedCommercials = computed(() =>
 <style scoped>
 main {
   overflow: scroll;
+}
+
+.list-card {
+  margin: 0 auto;
+  width: 100%;
 }
 </style>

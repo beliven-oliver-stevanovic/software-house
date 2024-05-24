@@ -3,8 +3,9 @@ import { useGameStore } from '@/stores/gameStore'
 import ListCard from '../components/ListCard.vue'
 import ListElement from '../components/ListElement.vue'
 import { computed, ref, watch } from 'vue'
-import { config } from '@/config.js'
+import { labels, alertBudgetLimit } from '@/config.js'
 import NavBar from '@/components/NavBar.vue'
+import HeaderComponent from '@/components/HeaderComponent.vue'
 
 const gameStore = useGameStore()
 
@@ -31,9 +32,7 @@ const decoratedDevs = computed(() =>
         id: dev.id,
         name: dev.name,
         seniority: dev.seniority.type,
-        status: dev.isOccupied
-          ? config.labels.workStatus.working
-          : config.labels.workStatus.notWorking,
+        status: dev.isOccupied ? labels.workStatus.working : labels.workStatus.notWorking,
         labels: {
           name: 'Name',
           seniority: 'Seniority',
@@ -87,14 +86,12 @@ watch(
 </script>
 
 <template>
-  <header>
-    <h1>Production</h1>
-  </header>
+  <HeaderComponent> Production </HeaderComponent>
 
   <main>
     <h2 class="budget-indicator">
       Budget:
-      <strong :class="gameStore.budget > config.alertBudgetLimit ? 'positive' : 'negative'">{{
+      <strong :class="gameStore.budget > alertBudgetLimit ? 'positive' : 'negative'">{{
         gameStore.budget
       }}</strong>
       <Transition name="slide-fade">

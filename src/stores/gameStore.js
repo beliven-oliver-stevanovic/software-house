@@ -1,15 +1,17 @@
 import { defineStore } from 'pinia'
 import Dev from '@/models/Dev'
 import Commercial from '@/models/Commercial'
+import Project from '@/models/Project'
 import { generateEmployeeName } from '@/utils'
 import JuniorStrategy from '@/models/JuniorStrategy'
 import MidStrategy from '@/models/MidStrategy'
 import SeniorStrategy from '@/models/SeniorStrategy'
-import { config } from '@/config'
+import config from '@/config'
 
 export const useGameStore = defineStore('game', {
   state: () => {
     return {
+      id: 1,
       devs: [new Dev(generateEmployeeName(), new JuniorStrategy())],
       commercials: [new Commercial(generateEmployeeName(), new JuniorStrategy())],
       projects: [],
@@ -18,10 +20,12 @@ export const useGameStore = defineStore('game', {
       highestBudgetPeak: config.initialBudget,
       timePassed: 0,
       playerId: 1,
+      playerRegistered: false,
       isGameStarted: false,
       dailyCost: config.dailyCost,
       hireTimer: config.hireTimer,
-      salariesTimer: config.salariesTimer
+      salariesTimer: config.salariesTimer,
+      playedGames: []
     }
   },
 
@@ -77,7 +81,6 @@ export const useGameStore = defineStore('game', {
       this.budget = config.initialBudget
       this.highestBudgetPeak = config.initialBudget
       this.timePassed = 0
-      this.playerId = -1
       this.dailyCost = config.dailyCost
       this.hireTimer = config.hireTimer
       this.salariesTimer = config.salariesTimer
@@ -98,6 +101,43 @@ export const useGameStore = defineStore('game', {
           ? new Dev(generateEmployeeName(), seniority)
           : new Commercial(generateEmployeeName(), seniority)
       ]
+    },
+    createSeniority(seniorityData) {
+      let seniority
+      switch (seniorityData.type) {
+        case 'Junior':
+          seniority = new JuniorStrategy(seniorityData)
+          break
+        case 'Mid':
+          seniority = new MidStrategy(seniorityData)
+          break
+        case 'Senior':
+          seniority = new SeniorStrategy(seniorityData)
+          break
+        default:
+          throw new Error(`Unknown seniority level: ${seniorityData.level}`)
+      }
+      return seniority
+    },
+    restoreGame(gameState) {
+      let status = JSON.parse(gameState)
+      this.devs = status.devs.map((devData) => {
+        return new Dev(devData.name, this.createSeniority(devData.seniority))
+      })
+      this.commercials = status.commercials.map((comData) => {
+        return new Commercial(comData.name, this.createSeniority(comData.seniority))
+      })
+      this.projects = status.projects.map(
+        (projectData) => new Project(projectData.name, projectData.value, projectData.complexity)
+      )
+      this.budget = status.budget
+      this.highestBudgetPeak = status.highestBudgetPeak
+      this.timePassed = status.timePassed
+      this.candidates = status.candidates
+      this.dailyCost = status.dailyCost
+      this.hireTimer = status.hireTimer
+      this.salariesTimer = status.salariesTimer
+      this.isGameStarted = true
     }
   },
 
@@ -110,6 +150,20 @@ export const useGameStore = defineStore('game', {
     },
     totalSalaries() {
       return this.totalDevSalaries + this.totalCommercialsSalaries
+    },
+    gameStatus(state) {
+      return {
+        budget: state.budget,
+        highestBudgetPeak: state.highestBudgetPeak,
+        timePassed: state.timePassed,
+        candidates: state.candidates,
+        devs: state.devs,
+        commercials: state.commercials,
+        projects: state.projects,
+        dailyCost: state.dailyCost,
+        hireTimer: state.hireTimer,
+        salariesTimer: state.salariesTimer
+      }
     }
   }
 })

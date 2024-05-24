@@ -31,5 +31,6 @@ div {
 ul {
   list-style-type: none;
   padding: 0.3rem;
+  width: 100%;
 }
 </style>
