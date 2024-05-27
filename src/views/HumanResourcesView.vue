@@ -45,6 +45,7 @@ const onHire = (candidate) => {
           v-for="candidate in decoratedCandidates"
           :key="candidate.id"
           :element="candidate"
+          :horizontal="true"
           :button="{ label: 'Hire', onClickFunction: () => onHire(candidate) }"
         />
       </template>

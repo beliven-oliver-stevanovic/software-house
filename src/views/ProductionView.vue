@@ -6,6 +6,8 @@ import { computed, ref, watch } from 'vue'
 import { labels, alertBudgetLimit } from '@/config.js'
 import NavBar from '@/components/NavBar.vue'
 import HeaderComponent from '@/components/HeaderComponent.vue'
+import TitleComponent from '@/components/TitleComponent.vue'
+import ButtonComponent from '@/components/ButtonComponent.vue'
 
 const gameStore = useGameStore()
 
@@ -89,24 +91,30 @@ watch(
   <HeaderComponent> Production </HeaderComponent>
 
   <main>
-    <h2 class="budget-indicator">
+    <TitleComponent dimension="xl">
       Budget:
-      <strong :class="gameStore.budget > alertBudgetLimit ? 'positive' : 'negative'">{{
+      <strong :class="gameStore.budget > alertBudgetLimit ? 'text-green-500' : 'text-red-500'">{{
         gameStore.budget
       }}</strong>
       <Transition name="slide-fade">
-        <span class="positive" v-if="budgetIncreased">+</span>
+        <span class="text-green-500" v-if="budgetIncreased">+</span>
       </Transition>
-    </h2>
+    </TitleComponent>
 
-    <div v-if="selectedProject" class="selected-dev">
-      <h2>Selected Project</h2>
-      <p>Assigning {{ selectedProject.name }}...</p>
-      <button @click="() => (selectedProject = null)">Cancel</button>
+    <div
+      v-if="selectedProject"
+      class="fixed bottom-[12%] left-auto shadow bg-white text-black rounded-lg p-2 flex justify-between items-center w-[50%] border-2 border-neutral-700"
+    >
+      <div>
+        <p class="font-bold">Assigning...</p>
+        <p>{{ selectedProject.name }}</p>
+      </div>
+
+      <ButtonComponent text="Cancel" @click="() => (selectedProject = null)" :negative="true" />
     </div>
 
-    <div class="list-container">
-      <ListCard class="list-card" title="Developers">
+    <div class="grid grid-cols-2 justify-evenly items-start gap-2 p-1 mb-3 w-full h-full">
+      <ListCard title="Developers">
         <template #elements>
           <ListElement
             v-for="dev in decoratedDevs"
@@ -114,14 +122,14 @@ watch(
             :element="dev"
             @click="
               () => {
-                if (!dev.isOccupied && selectedProject) assignProject(dev.id)
+                if (!dev.workTime && selectedProject) assignProject(dev.id)
               }
             "
           />
         </template>
       </ListCard>
 
-      <ListCard class="list-card" title="Projects">
+      <ListCard title="Projects">
         <template #elements>
           <ListElement
             v-for="project in decoratedProjects"
@@ -142,24 +150,6 @@ watch(
 </template>
 
 <style scoped>
-.budget-indicator {
-  padding: 0.5rem;
-  border-radius: 1rem;
-  text-align: center;
-}
-.positive {
-  color: green;
-}
-.negative {
-  color: red;
-}
-
-.list-card {
-  max-height: 100%;
-  height: fit-content;
-  overflow-y: scroll;
-}
-
 .selected-dev {
   position: fixed;
   bottom: 12%;
@@ -168,18 +158,6 @@ watch(
   background-color: white;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   text-align: center;
-}
-
-.list-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  justify-content: space-evenly;
-  align-content: start;
-  width: 100vw;
-  height: 100%;
-  gap: 1rem;
-  padding: 0.8rem;
-  overflow: scroll;
 }
 
 .slide-fade-enter-active {

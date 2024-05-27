@@ -3,6 +3,9 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useGameStore } from '@/stores/gameStore'
 import { getOne, postOne } from '@/server'
+import TitleComponent from '@/components/TitleComponent.vue'
+import InputField from '@/components/InputField.vue'
+import ButtonComponent from '@/components/ButtonComponent.vue'
 
 const name = ref('')
 const router = useRouter()
@@ -40,44 +43,16 @@ const register = async () => {
 
 <template>
   <header>
-    <h1>Register</h1>
+    <TitleComponent dimension="2xl">Software House Tycoon</TitleComponent>
   </header>
 
   <main>
-    <form @submit.prevent="register">
-      <h3>Welcome to Software house Tycoon!</h3>
-      <span>
-        <input type="name" id="name" v-model="name" placeholder="Player name" />
+    <form @submit.prevent="register" class="flex flex-col gap-5 py-5">
+      <TitleComponent dimension="xl">Welcome to Software house Tycoon!</TitleComponent>
+      <span class="flex w-full justify-evenly align-middle">
+        <InputField v-model="name" type="text" placeholder="Enter your username" />
+        <ButtonComponent type="submit" text="Play!" :positive="true" />
       </span>
-      <button type="submit">Play!</button>
     </form>
   </main>
 </template>
-
-<style scoped>
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 3rem;
-  gap: 2rem;
-}
-
-span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  width: 70%;
-}
-
-input {
-  width: 100%;
-}
-
-button {
-  width: 40%;
-  background-color: green;
-  color: white;
-}
-</style>

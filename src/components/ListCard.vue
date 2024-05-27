@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps } from 'vue'
+import TitleComponent from './TitleComponent.vue'
 
 defineProps({
   title: String
@@ -7,30 +8,14 @@ defineProps({
 </script>
 
 <template>
-  <div>
-    <h3>{{ title }}</h3>
-    <ul>
+  <div
+    class="max-h-full overflow-scroll h-fit flex flex-col items-center p-1 bg-white rounded-lg shadow-xl"
+  >
+    <TitleComponent dimension="xl">{{ title }}</TitleComponent>
+    <ul class="list-none p-1 w-full">
       <slot name="elements">
         <p>No elements available...</p>
       </slot>
     </ul>
   </div>
 </template>
-
-<style scoped>
-div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0.5rem;
-  background-color: white;
-  border-radius: 1rem;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0.3rem;
-  width: 100%;
-}
-</style>

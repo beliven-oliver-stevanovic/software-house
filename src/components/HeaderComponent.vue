@@ -2,6 +2,8 @@
 import { useGameStore } from '@/stores/gameStore'
 import { useRouter } from 'vue-router'
 import { patchOne } from '@/server'
+import ButtonComponent from './ButtonComponent.vue'
+import TitleComponent from './TitleComponent.vue'
 
 const gameStore = useGameStore()
 const router = useRouter()
@@ -28,8 +30,13 @@ const exitGame = async () => {
 
 <template>
   <header>
-    <h1><slot></slot></h1>
-    <button class="exit-button" @click="exitGame()">Exit</button>
+    <TitleComponent dimension="2xl"><slot></slot></TitleComponent>
+    <ButtonComponent
+      @click="exitGame"
+      text="Exit"
+      :negative="true"
+      class="bg-red-500 fixed top-5 right-5"
+    />
   </header>
 </template>
 

@@ -4,6 +4,8 @@ import { useGameStore } from '@/stores/gameStore'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { postOne } from '@/server'
+import TitleComponent from '@/components/TitleComponent.vue'
+import ButtonComponent from '@/components/ButtonComponent.vue'
 
 const rankings = ref([])
 const isByBudget = ref(true)
@@ -46,21 +48,31 @@ const restartGame = async () => {
 
 <template>
   <header>
-    <h1>Rankings</h1>
+    <TitleComponent dimension="2xl">Rankings</TitleComponent>
   </header>
-  <main>
-    <span>
-      <button @click="getRankingsByBudget" :class="isByBudget ? 'activeButton' : null">
+  <main class="h-full">
+    <span class="flex items-center justify-evenly w-full">
+      <button
+        @click="getRankingsByBudget"
+        :class="isByBudget ? 'p-2 rounded-lg activeButton' : 'p-2 rounded-lg border border-black'"
+      >
         By Budget
       </button>
-      <button @click="getRankingsByTime" :class="!isByBudget ? 'activeButton' : null">
+      <button
+        @click="getRankingsByTime"
+        :class="!isByBudget ? 'p-2 rounded-lg activeButton' : 'p-2 rounded-lg border border-black'"
+      >
         By Time
       </button>
     </span>
-    <ul class="ranking-list">
-      <li v-for="(ranking, index) in rankings" :key="ranking.id">
-        <span>
-          <h2>{{ index + 1 }}.</h2>
+    <ul class="flex flex-col items-center gap-1 w-[100%] overflow-scroll">
+      <li
+        v-for="(ranking, index) in rankings"
+        :key="ranking.id"
+        class="m-1 p-1 rounded-lg w-[90%] bg-neutral-50 border-2 shadow-md"
+      >
+        <span class="flex items-center justify-evenly">
+          <TitleComponent dimension="2xl">{{ index + 1 }}.</TitleComponent>
           <p>
             {{ 'Player: ' + ranking.player.name }}
             <br />
@@ -73,47 +85,13 @@ const restartGame = async () => {
         </span>
       </li>
     </ul>
-    <button class="restartButton" @click="restartGame()">Restart game</button>
+    <ButtonComponent @click="restartGame()" text="Restart game" :positive="true" />
   </main>
 </template>
 
 <style scoped>
-.ranking-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1rem;
-  gap: 1rem;
-  width: 90%;
-  overflow: scroll;
-}
-
-li {
-  list-style-type: none;
-  margin: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 20px;
-  width: 90%;
-  background-color: #f0f0f0;
-  border: 1px solid black;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-}
-
 .activeButton {
   background-color: gray;
   color: white;
-}
-
-.restartButton {
-  width: 40%;
-  background-color: green;
-  color: white;
-}
-
-span {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
 }
 </style>

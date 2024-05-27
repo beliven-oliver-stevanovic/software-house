@@ -7,6 +7,8 @@ import ListElement from '../components/ListElement.vue'
 import { postOne } from '@/server'
 import axios from 'axios'
 import { baseAPIUrl } from '@/config'
+import TitleComponent from '@/components/TitleComponent.vue'
+import ButtonComponent from '@/components/ButtonComponent.vue'
 
 const gameStore = useGameStore()
 const inProgressGames = ref([])
@@ -66,11 +68,11 @@ const newGame = async () => {
 
 <template>
   <header>
-    <h1>Main Menu</h1>
+    <TitleComponent dimension="2xl">Main Menu</TitleComponent>
   </header>
   <main>
-    <h2>Resume Game</h2>
-    <ListCard class="list-card">
+    <h2 class="text-xl font-bold">Resume Game</h2>
+    <ListCard class="overflow-scroll">
       <template #elements>
         <ListElement
           v-for="game in decoratedGames"
@@ -80,20 +82,6 @@ const newGame = async () => {
         />
       </template>
     </ListCard>
-    <button class="positive" @click="newGame()">New Game</button>
+    <ButtonComponent type="submit" @click="newGame" text="New Game" :positive="true" />
   </main>
 </template>
-
-<style scoped>
-.list-card {
-  overflow: scroll;
-}
-
-button {
-  width: 40%;
-  background-color: green;
-  color: white;
-  position: fixed;
-  bottom: 3%;
-}
-</style>
