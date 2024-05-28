@@ -1,5 +1,10 @@
 <script setup>
-defineProps(['dimension'])
+defineProps({
+  dimension: {
+    type: String,
+    default: '2xl'
+  }
+})
 </script>
 
 <template>

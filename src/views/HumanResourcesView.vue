@@ -19,10 +19,10 @@ const decoratedCandidates = computed(() =>
       role: candidate instanceof Dev ? labels.roles.developer : labels.roles.commercial,
       cost: candidate.salary,
       labels: {
-        name: 'Name',
-        seniority: 'Seniority',
-        role: 'Role',
-        cost: 'Cost'
+        name: '',
+        seniority: 'Seniority: ',
+        role: 'Role: ',
+        cost: 'Cost: $'
       }
     }
   })
@@ -39,7 +39,7 @@ const onHire = (candidate) => {
   <HeaderComponent> HR </HeaderComponent>
 
   <main>
-    <ListCard class="list-card" title="Candidates">
+    <ListCard class="w-[90%] mx-auto" title="Candidates">
       <template #elements>
         <ListElement
           v-for="candidate in decoratedCandidates"
@@ -53,14 +53,3 @@ const onHire = (candidate) => {
     <NavBar />
   </main>
 </template>
-
-<style scoped>
-main {
-  overflow: scroll;
-}
-
-.list-card {
-  margin: 0 auto;
-  width: 90%;
-}
-</style>

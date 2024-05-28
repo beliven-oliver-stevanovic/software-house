@@ -39,18 +39,3 @@ const exitGame = async () => {
     />
   </header>
 </template>
-
-<style scoped>
-.exit-button {
-  position: absolute;
-  right: 0;
-  top: 0;
-  margin: 2rem;
-  padding: 0.5rem;
-  border-radius: 10px;
-  background-color: red;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-</style>

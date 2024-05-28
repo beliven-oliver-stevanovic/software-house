@@ -16,9 +16,9 @@ const decoratedCommercials = computed(() =>
       cost: commercial.salary,
       seniority: commercial.seniority.type,
       labels: {
-        name: 'Name',
-        cost: 'Cost',
-        seniority: 'Seniority'
+        name: '',
+        cost: 'Cost: $',
+        seniority: 'Seniority: '
       }
     }
   })

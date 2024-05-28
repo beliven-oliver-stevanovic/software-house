@@ -23,10 +23,10 @@ const decoratedDevs = computed(() =>
         seniority: dev.seniority.type,
         workTime: dev.workTime ? dev.workTime : 0,
         labels: {
-          name: 'Name',
-          seniority: 'Seniority',
-          status: 'Status',
-          workTime: 'Work Left'
+          name: '',
+          seniority: 'Seniority: ',
+          status: 'Status: ',
+          workTime: 'Work left: '
         }
       }
     } else {
@@ -36,9 +36,9 @@ const decoratedDevs = computed(() =>
         seniority: dev.seniority.type,
         status: dev.isOccupied ? labels.workStatus.working : labels.workStatus.notWorking,
         labels: {
-          name: 'Name',
-          seniority: 'Seniority',
-          status: 'Status'
+          name: '',
+          seniority: 'Seniority: ',
+          status: 'Status: '
         }
       }
     }
@@ -56,9 +56,9 @@ const decoratedProjects = computed(() =>
           value: project.value,
           complexity: project.complexity,
           labels: {
-            name: 'Name',
-            value: 'Value',
-            complexity: 'Complexity'
+            name: '',
+            value: 'Value: $',
+            complexity: 'Complexity: '
           }
         }
       }

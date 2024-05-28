@@ -78,8 +78,8 @@ const restartGame = async () => {
             <br />
             {{
               isByBudget
-                ? 'Maximum budget: ' + ranking.max_budget
-                : 'Game time: ' + ranking.time_passed
+                ? 'Maximum budget: ' + ranking.max_budget + '$'
+                : 'Game time: ' + ranking.time_passed + ' seconds'
             }}
           </p>
         </span>
