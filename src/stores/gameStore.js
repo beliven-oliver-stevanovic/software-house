@@ -131,10 +131,14 @@ export const useGameStore = defineStore('game', {
       this.projects = status.projects.map(
         (projectData) => new Project(projectData.name, projectData.value, projectData.complexity)
       )
+      this.candidates = status.candidates.map((candidateData) => {
+        return 'workTime' in candidateData
+          ? new Dev(candidateData.name, this.createSeniority(candidateData.seniority))
+          : new Commercial(candidateData.name, this.createSeniority(candidateData.seniority))
+      })
       this.budget = status.budget
       this.highestBudgetPeak = status.highestBudgetPeak
       this.timePassed = status.timePassed
-      this.candidates = status.candidates
       this.dailyCost = status.dailyCost
       this.hireTimer = status.hireTimer
       this.salariesTimer = status.salariesTimer

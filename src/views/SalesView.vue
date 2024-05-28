@@ -28,7 +28,7 @@ const decoratedCommercials = computed(() =>
 <template>
   <HeaderComponent> Sales </HeaderComponent>
   <main>
-    <ListCard class="list-card" title="Commercials">
+    <ListCard class="w-full mx-auto" title="Commercials">
       <template #elements>
         <ListElement
           v-for="commercial in decoratedCommercials"
@@ -40,14 +40,3 @@ const decoratedCommercials = computed(() =>
     <NavBar />
   </main>
 </template>
-
-<style scoped>
-main {
-  overflow: scroll;
-}
-
-.list-card {
-  margin: 0 auto;
-  width: 100%;
-}
-</style>
