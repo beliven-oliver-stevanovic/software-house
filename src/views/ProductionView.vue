@@ -93,9 +93,9 @@ watch(
   <main>
     <TitleComponent dimension="xl">
       Budget:
-      <strong :class="gameStore.budget > alertBudgetLimit ? 'text-green-500' : 'text-red-500'">{{
-        gameStore.budget
-      }}</strong>
+      <strong :class="gameStore.budget > alertBudgetLimit ? 'text-green-500' : 'text-red-500'"
+        >{{ gameStore.budget }}$</strong
+      >
       <Transition name="slide-fade">
         <span class="text-green-500" v-if="budgetIncreased">+</span>
       </Transition>

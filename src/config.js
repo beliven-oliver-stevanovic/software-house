@@ -2,10 +2,9 @@ export const baseAPIUrl = 'http://localhost:8000/api'
 export const gameLoopInterval = 1000
 export const hireTimer = 5
 export const salariesTimer = 30
-export const candidateFindingInterval = 2000
-export const initialBudget = 500
+export const initialBudget = 5000
 export const alertBudgetLimit = 1000
-export const dailyCost = 10
+export const dailyCost = 5
 export const juniorSalary = 100
 export const midSalary = 200
 export const seniorSalary = 300
@@ -41,7 +40,6 @@ export default {
   gameLoopInterval,
   hireTimer,
   salariesTimer,
-  candidateFindingInterval,
   initialBudget,
   alertBudgetLimit,
   dailyCost,
