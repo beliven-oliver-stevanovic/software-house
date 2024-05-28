@@ -26,8 +26,7 @@ defineProps({
     <div>
       <span v-for="(value, key) in element" :key="key">
         <p v-if="key != 'id' && key != 'labels'">
-          <strong>{{ element.labels[key] }}</strong
-          >{{ value }}
+          {{ element.labels[key] }}<strong>{{ value }}</strong>
         </p></span
       >
     </div>
