@@ -1,49 +1,16 @@
 <script setup>
-import { baseAPIUrl } from '@/config'
-import { useGameStore } from '@/stores/gameStore'
 import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { postOne } from '@/server'
+import { useGame } from '@/game'
 import TitleComponent from '@/components/TitleComponent.vue'
 import ButtonComponent from '@/components/ButtonComponent.vue'
 
 const rankings = ref([])
 const isByBudget = ref(true)
-const router = useRouter()
-const gameStore = useGameStore()
+const { getRankingsByBudget, getRankingsByTime, restartGame } = useGame()
 
 onMounted(async () => {
-  getRankingsByBudget()
+  rankings.value = await getRankingsByBudget()
 })
-
-const getRankingsByBudget = async () => {
-  const response = await fetch(`${baseAPIUrl}/games/ranking/max_budget`)
-  rankings.value = await response.json()
-  isByBudget.value = true
-}
-
-const getRankingsByTime = async () => {
-  const response = await fetch(`${baseAPIUrl}/games/ranking/time_passed`)
-  rankings.value = await response.json()
-  isByBudget.value = false
-}
-
-const restartGame = async () => {
-  gameStore.resetStats()
-  await postOne('games', {
-    time_passed: gameStore.timePassed,
-    max_budget: gameStore.highestBudgetPeak,
-    player_id: gameStore.playerId,
-    budget: gameStore.budget,
-    status: JSON.stringify(gameStore.gameStatus)
-  }).then((data) => {
-    gameStore.id = data.id
-    gameStore.isGameStarted = true
-    router.push({
-      name: 'production'
-    })
-  })
-}
 </script>
 
 <template>
@@ -53,14 +20,32 @@ const restartGame = async () => {
   <main class="h-full">
     <span class="flex items-center justify-evenly w-full">
       <button
-        @click="getRankingsByBudget"
-        :class="isByBudget ? 'p-2 rounded-lg activeButton' : 'p-2 rounded-lg border border-black'"
+        @click="
+          async () => {
+            rankings = await getRankingsByBudget()
+            isByBudget = true
+          }
+        "
+        :class="
+          isByBudget
+            ? 'p-2 rounded-lg bg-gray-500 text-white'
+            : 'p-2 rounded-lg border border-black'
+        "
       >
         By Budget
       </button>
       <button
-        @click="getRankingsByTime"
-        :class="!isByBudget ? 'p-2 rounded-lg activeButton' : 'p-2 rounded-lg border border-black'"
+        @click="
+          async () => {
+            rankings = await getRankingsByTime()
+            isByBudget = false
+          }
+        "
+        :class="
+          !isByBudget
+            ? 'p-2 rounded-lg bg-gray-500 text-white'
+            : 'p-2 rounded-lg border border-black'
+        "
       >
         By Time
       </button>
@@ -74,7 +59,7 @@ const restartGame = async () => {
         <span class="flex items-center justify-evenly">
           <TitleComponent dimension="2xl">{{ index + 1 }}.</TitleComponent>
           <p>
-            {{ 'Player: ' + ranking.player.name }}
+            <strong>{{ ranking.player.name }}</strong>
             <br />
             {{
               isByBudget
@@ -85,13 +70,10 @@ const restartGame = async () => {
         </span>
       </li>
     </ul>
-    <ButtonComponent @click="restartGame()" text="Restart game" :positive="true" />
+    <ButtonComponent
+      @click="async () => await restartGame()"
+      text="Restart game"
+      :positive="true"
+    />
   </main>
 </template>
-
-<style scoped>
-.activeButton {
-  background-color: gray;
-  color: white;
-}
-</style>

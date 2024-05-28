@@ -7,8 +7,10 @@ import ListElement from '../components/ListElement.vue'
 import { labels } from '@/config.js'
 import NavBar from '../components/NavBar.vue'
 import HeaderComponent from '@/components/HeaderComponent.vue'
+import { useGame } from '@/game'
 
 const gameStore = useGameStore()
+const { onHire } = useGame()
 
 const decoratedCandidates = computed(() =>
   gameStore.candidates.map((candidate) => {
@@ -27,12 +29,6 @@ const decoratedCandidates = computed(() =>
     }
   })
 )
-
-const onHire = (candidate) => {
-  let toHire = gameStore.candidates.find((c) => c.id === candidate.id)
-  gameStore.hireCandidate(toHire)
-  gameStore.candidates = gameStore.candidates.filter((c) => c.id !== candidate.id)
-}
 </script>
 
 <template>

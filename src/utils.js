@@ -57,3 +57,8 @@ export const generateEmployeeName = () => {
   const lastName = lastNames[Math.floor(Math.random() * lastNames.length)]
   return `${firstName} ${lastName}`
 }
+
+export const formatDateTime = (dateString) => {
+  const date = new Date(dateString)
+  return `${date.toLocaleTimeString()} - ${date.toLocaleDateString()}`
+}
