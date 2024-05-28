@@ -1,7 +1,7 @@
 import { baseAPIUrl } from './config'
 import axios from 'axios'
 import { useGameStore } from './stores/gameStore'
-import { postOne } from './server'
+import { postOne, patchOne } from './server'
 import { useRouter } from 'vue-router'
 
 export function useGame() {
@@ -35,7 +35,6 @@ export function useGame() {
 
   const getRankingsByBudget = async () => {
     const response = await axios.get(`${baseAPIUrl}/games/ranking/max_budget`)
-    console.log(response.data)
     return response.data
   }
 
@@ -55,9 +54,7 @@ export function useGame() {
     }).then((data) => {
       gameStore.id = data.id
       gameStore.isGameStarted = true
-      router.push({ name: 'production' }).catch((error) => {
-        console.error(error)
-      })
+      router.push({ name: 'production' })
     })
   }
 
@@ -72,6 +69,25 @@ export function useGame() {
     return response.data
   }
 
+  const exitGame = async () => {
+    let gameObj = {
+      time_passed: gameStore.timePassed,
+      max_budget: gameStore.highestBudgetPeak,
+      player_id: gameStore.playerId,
+      budget: gameStore.budget,
+      status: JSON.stringify(gameStore.gameStatus)
+    }
+    const patchedGame = await patchOne('games', gameStore.id, gameObj)
+    gameStore.isGameStarted = false
+    let index = gameStore.playedGames.findIndex((game) => game.id === patchedGame.id)
+    if (index === -1) {
+      gameStore.playedGames.push(patchedGame)
+    } else {
+      gameStore.playedGames[index] = patchedGame
+    }
+    router.push('/main-menu')
+  }
+
   return {
     setupGame,
     newGame,
@@ -79,6 +95,7 @@ export function useGame() {
     getRankingsByTime,
     restartGame,
     onHire,
-    getInProgressGames
+    getInProgressGames,
+    exitGame
   }
 }

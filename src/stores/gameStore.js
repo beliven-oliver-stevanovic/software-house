@@ -78,6 +78,7 @@ export const useGameStore = defineStore('game', {
       this.devs = [new Dev(generateEmployeeName(), new JuniorStrategy())]
       this.commercials = [new Commercial(generateEmployeeName(), new JuniorStrategy())]
       this.projects = []
+      this.candidates = []
       this.budget = config.initialBudget
       this.highestBudgetPeak = config.initialBudget
       this.timePassed = 0
