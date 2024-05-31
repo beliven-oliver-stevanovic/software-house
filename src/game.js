@@ -1,5 +1,5 @@
-import { baseAPIUrl } from './config'
-import axios from 'axios'
+import { apiURL, backendURL } from './config'
+import axios from './axios'
 import { useGameStore } from './stores/gameStore'
 import { postOne, patchOne } from './server'
 import { useRouter } from 'vue-router'
@@ -7,6 +7,9 @@ import { useRouter } from 'vue-router'
 export function useGame() {
   const gameStore = useGameStore()
   const router = useRouter()
+
+  axios.defaults.withCredentials = true
+  axios.defaults.withXSRFToken = true
 
   const setupGame = (game) => {
     gameStore.id = game.id
@@ -22,7 +25,7 @@ export function useGame() {
     const game = await postOne('games', {
       time_passed: gameStore.timePassed,
       max_budget: gameStore.highestBudgetPeak,
-      player_id: gameStore.playerId,
+      user_id: gameStore.userId,
       budget: gameStore.budget,
       status: JSON.stringify(gameStore.gameStatus)
     })
@@ -34,12 +37,12 @@ export function useGame() {
   }
 
   const getRankingsByBudget = async () => {
-    const response = await axios.get(`${baseAPIUrl}/games/ranking/max_budget`)
+    const response = await axios.get(`${apiURL}/games/ranking/max_budget`)
     return response.data
   }
 
   const getRankingsByTime = async () => {
-    const response = await axios.get(`${baseAPIUrl}/games/ranking/time_passed`)
+    const response = await axios.get(`${apiURL}/games/ranking/time_passed`)
     return response.data
   }
 
@@ -48,7 +51,7 @@ export function useGame() {
     await postOne('games', {
       time_passed: gameStore.timePassed,
       max_budget: gameStore.highestBudgetPeak,
-      player_id: gameStore.playerId,
+      user_id: gameStore.userId,
       budget: gameStore.budget,
       status: JSON.stringify(gameStore.gameStatus)
     }).then((data) => {
@@ -65,7 +68,7 @@ export function useGame() {
   }
 
   const getInProgressGames = async () => {
-    const response = await axios.get(`${baseAPIUrl}/games/in_progress/${gameStore.playerId}`)
+    const response = await axios.get(`${apiURL}/games/in_progress/${gameStore.userId}`)
     return response.data
   }
 
@@ -73,7 +76,7 @@ export function useGame() {
     let gameObj = {
       time_passed: gameStore.timePassed,
       max_budget: gameStore.highestBudgetPeak,
-      player_id: gameStore.playerId,
+      user_id: gameStore.userId,
       budget: gameStore.budget,
       status: JSON.stringify(gameStore.gameStatus)
     }
@@ -88,6 +91,14 @@ export function useGame() {
     router.push('/main-menu')
   }
 
+  const logout = async () => {
+    await axios.post(`${backendURL}/logout`)
+    gameStore.resetStats()
+    gameStore.userRegistered = false
+    gameStore.isGameStarted = false
+    router.push('/')
+  }
+
   return {
     setupGame,
     newGame,
@@ -96,6 +107,7 @@ export function useGame() {
     restartGame,
     onHire,
     getInProgressGames,
-    exitGame
+    exitGame,
+    logout
   }
 }

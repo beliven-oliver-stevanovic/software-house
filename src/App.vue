@@ -4,6 +4,9 @@ import '@/main.css'
 import { useGameStore } from '@/stores/gameStore'
 import { hireTimer, salariesTimer, gameLoopInterval } from '@/config.js'
 import { patchOne } from './server'
+import axios from './axios'
+import { apiURL } from './config'
+import { onMounted } from 'vue'
 
 const gameStore = useGameStore()
 
@@ -35,13 +38,26 @@ const gameOver = async () => {
   await patchOne('games', gameStore.id, {
     time_passed: gameStore.timePassed,
     max_budget: gameStore.highestBudgetPeak,
-    player_id: gameStore.playerId,
+    user_id: gameStore.userId,
     budget: gameStore.budget,
     status: JSON.stringify(gameStore.gameStatus)
   })
   alert('Game Over')
   router.push('/rankings')
 }
+
+onMounted(async () => {
+  if (!gameStore.userRegistered) {
+    await axios.get(`${apiURL}/user`).then((user) => {
+      gameStore.userId = user.data.id
+      gameStore.userRegistered = true
+      gameStore.playedGames = user.data.games
+      router.push({
+        name: 'main-menu'
+      })
+    })
+  }
+})
 </script>
 
 <template>

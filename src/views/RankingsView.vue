@@ -15,7 +15,7 @@ onMounted(async () => {
 
 <template>
   <header>
-    <TitleComponent dimension="2xl">Rankings</TitleComponent>
+    <TitleComponent>Rankings</TitleComponent>
   </header>
   <main class="h-full">
     <span class="flex items-center justify-evenly w-full">
@@ -57,9 +57,9 @@ onMounted(async () => {
         class="m-1 p-1 rounded-lg w-[90%] bg-neutral-50 border-2 shadow-md"
       >
         <span class="flex items-center justify-evenly">
-          <TitleComponent dimension="2xl">{{ index + 1 }}.</TitleComponent>
+          <TitleComponent>{{ index + 1 }}.</TitleComponent>
           <p>
-            <strong>{{ ranking.player.name }}</strong>
+            <strong>{{ ranking.user.name }}</strong>
             <br />
             {{
               isByBudget

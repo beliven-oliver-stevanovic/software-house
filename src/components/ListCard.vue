@@ -11,7 +11,7 @@ defineProps({
   <div
     class="max-h-full overflow-scroll h-fit flex flex-col items-center p-1 bg-white rounded-lg shadow-xl"
   >
-    <TitleComponent dimension="xl">{{ title }}</TitleComponent>
+    <TitleComponent>{{ title }}</TitleComponent>
     <ul class="list-none p-1 w-full">
       <slot name="elements">
         <p>No elements available...</p>

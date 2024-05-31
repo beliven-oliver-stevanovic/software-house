@@ -1,4 +1,6 @@
-export const baseAPIUrl = 'http://localhost:8000/api'
+export const apiURL = 'http://localhost:8000/api'
+export const backendURL = 'http://localhost:8000'
+export const csfrURL = 'http://localhost:8000/sanctum/csrf-cookie'
 export const gameLoopInterval = 1000
 export const hireTimer = 5
 export const salariesTimer = 30
@@ -36,7 +38,7 @@ export const labels = {
 }
 
 export default {
-  baseAPIUrl,
+  apiURL,
   gameLoopInterval,
   hireTimer,
   salariesTimer,

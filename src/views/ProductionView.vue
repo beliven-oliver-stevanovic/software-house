@@ -91,7 +91,7 @@ watch(
   <HeaderComponent> Production </HeaderComponent>
 
   <main>
-    <TitleComponent dimension="xl">
+    <TitleComponent>
       Budget:
       <strong :class="gameStore.budget > alertBudgetLimit ? 'text-green-500' : 'text-red-500'"
         >{{ gameStore.budget }}$</strong

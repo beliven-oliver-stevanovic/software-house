@@ -8,7 +8,7 @@ const { exitGame } = useGame()
 
 <template>
   <header>
-    <TitleComponent dimension="2xl"><slot></slot></TitleComponent>
+    <TitleComponent><slot></slot></TitleComponent>
     <ButtonComponent
       @click="async () => await exitGame()"
       text="Exit"

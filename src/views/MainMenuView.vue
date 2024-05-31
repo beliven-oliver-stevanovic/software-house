@@ -8,7 +8,7 @@ import { useGame } from '@/game'
 import { formatDateTime } from '@/utils'
 
 const inProgressGames = ref([])
-const { setupGame, newGame, getInProgressGames } = useGame()
+const { setupGame, newGame, getInProgressGames, logout } = useGame()
 
 onMounted(async () => {
   inProgressGames.value = await getInProgressGames()
@@ -35,7 +35,13 @@ const decoratedGames = computed(() => {
 
 <template>
   <header>
-    <TitleComponent dimension="2xl">Main Menu</TitleComponent>
+    <TitleComponent>Main Menu</TitleComponent>
+    <ButtonComponent
+      @click="async () => await logout()"
+      text="Logout"
+      :negative="true"
+      class="bg-red-500 fixed top-5 right-5"
+    />
   </header>
   <main>
     <h2 class="text-xl font-bold">Resume Game</h2>

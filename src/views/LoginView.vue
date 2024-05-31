@@ -1,45 +1,31 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useGameStore } from '@/stores/gameStore'
 import TitleComponent from '@/components/TitleComponent.vue'
 import InputField from '@/components/InputField.vue'
 import ButtonComponent from '@/components/ButtonComponent.vue'
 import axios from 'axios'
-import { useGameStore } from '../stores/gameStore'
-import { csfrURL, backendURL, apiURL } from '../config'
+import { csfrURL, backendURL, apiURL } from '@/config'
 
-const name = ref('')
 const email = ref('')
 const password = ref('')
-const confirmation = ref('')
 const error = ref('')
 const router = useRouter()
 const gameStore = useGameStore()
 
-const register = async () => {
-  if (password.value !== confirmation.value) {
-    error.value = 'Passwords do not match'
-    return
-  }
+const login = async () => {
   axios.defaults.withCredentials = true
   axios.defaults.withXSRFToken = true
   await axios.get(csfrURL)
-  const response = await axios.post(`${backendURL}/register`, {
-    name: name.value,
+  await axios.post(`${backendURL}/login`, {
     email: email.value,
-    password: password.value,
-    password_confirmation: confirmation.value
+    password: password.value
   })
-
-  if (response.status === 403) {
-    error.value = response.statusText
-    return
-  }
-
   const user = await axios.get(`${apiURL}/user`)
-
   gameStore.userId = user.data.id
   gameStore.userRegistered = true
+  gameStore.playedGames = user.data.games
   router.push({
     name: 'main-menu'
   })
@@ -52,15 +38,13 @@ const register = async () => {
   </header>
 
   <main>
-    <TitleComponent>Welcome to Software house Tycoon!</TitleComponent>
-    <form @submit.prevent="register" class="flex flex-col gap-5 py-5">
-      <InputField v-model="name" name="name" placeholder="Username" />
+    <TitleComponent>Welcome back to Software house Tycoon!</TitleComponent>
+    <form @submit.prevent="login" class="flex flex-col gap-5 py-5">
       <InputField v-model="email" type="email" name="email" placeholder="Email" />
       <InputField v-model="password" type="password" name="password" placeholder="Password" />
-      <InputField v-model="confirmation" type="password" placeholder="Confirm password" />
       <p v-if="error != ''" class="text-red-500 font-bold">{{ error }}</p>
       <ButtonComponent type="submit" text="Play!" :positive="true" />
-      <p>Already registered? <a class="text-black underline" href="/">Log in</a></p>
+      <p>Yet to register? <a class="text-black underline" href="/register">Sign up</a></p>
     </form>
   </main>
 </template>

@@ -1,14 +1,5 @@
-<script setup>
-defineProps({
-  dimension: {
-    type: String,
-    default: '2xl'
-  }
-})
-</script>
-
 <template>
-  <h1 :class="'text-' + dimension + ' font-bold'">
+  <h1 :class="'text-2xl font-bold'">
     <slot></slot>
   </h1>
 </template>

@@ -6,6 +6,11 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      name: 'login',
+      component: () => import('../views/LoginView.vue')
+    },
+    {
+      path: '/register',
       name: 'register',
       component: () => import('../views/RegistrationView.vue')
     },
@@ -37,14 +42,14 @@ const router = createRouter({
   ]
 })
 
-let whiteList = ['register', 'rankings']
+let whiteList = ['register', 'login', 'rankings']
 
 router.beforeEach((to, from, next) => {
   const gameStore = useGameStore()
   if (whiteList.includes(to.name)) {
     gameStore.isGameStarted = false
     next()
-  } else if (gameStore.playerRegistered) {
+  } else if (gameStore.userRegistered) {
     if (gameStore.isGameStarted && to.name != 'main-menu') next()
     else if (gameStore.isGameStarted && to.name == 'main-menu') next({ name: from.name })
     else if (!gameStore.isGameStarted && to.name == 'main-menu') next()

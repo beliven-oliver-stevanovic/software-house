@@ -1,5 +1,5 @@
-import { baseAPIUrl } from '@/config.js'
-import axios from 'axios'
+import { apiURL } from '@/config.js'
+import axios from './axios'
 
 const get = async (url) => {
   return await axios
@@ -35,17 +35,17 @@ const patch = async (url, data) => {
 }
 
 export const getOne = async (entity, id) => {
-  return get(`${baseAPIUrl}/${entity}/${id}`)
+  return get(`${apiURL}/${entity}/${id}`)
 }
 
 export const getMany = async (entity) => {
-  return get(`${baseAPIUrl}/${entity}`)
+  return get(`${apiURL}/${entity}`)
 }
 
 export const postOne = async (entity, data) => {
-  return post(`${baseAPIUrl}/${entity}`, data)
+  return post(`${apiURL}/${entity}`, data)
 }
 
 export const patchOne = async (entity, id, data) => {
-  return patch(`${baseAPIUrl}/${entity}/${id}`, data)
+  return patch(`${apiURL}/${entity}/${id}`, data)
 }
