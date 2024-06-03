@@ -9,7 +9,7 @@ defineProps({
 
 <template>
   <div
-    class="max-h-full overflow-scroll h-fit flex flex-col items-center p-1 bg-white rounded-lg shadow-xl"
+    class="max-h-full overflow-scroll h-fit flex flex-col items-center p-1 bg-white rounded-lg shadow-xl pb-10"
   >
     <TitleComponent>{{ title }}</TitleComponent>
     <ul class="list-none p-1 w-full">

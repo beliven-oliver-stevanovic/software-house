@@ -1,7 +1,7 @@
-import { apiURL, backendURL } from './config'
-import axios from './axios'
-import { useGameStore } from './stores/gameStore'
-import { postOne, patchOne } from './server'
+import { apiURL, backendURL } from '@/config'
+import axios from '@/axios'
+import { useGameStore } from '@/stores/gameStore'
+import { postOne, patchOne } from '@/server'
 import { useRouter } from 'vue-router'
 
 export function useGame() {

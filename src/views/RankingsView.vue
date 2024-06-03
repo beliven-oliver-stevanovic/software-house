@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { useGame } from '@/game'
+import { useGame } from '@/composables/game'
 import TitleComponent from '@/components/TitleComponent.vue'
 import ButtonComponent from '@/components/ButtonComponent.vue'
 

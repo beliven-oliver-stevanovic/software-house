@@ -4,7 +4,7 @@ import ListCard from '../components/ListCard.vue'
 import ListElement from '../components/ListElement.vue'
 import TitleComponent from '@/components/TitleComponent.vue'
 import ButtonComponent from '@/components/ButtonComponent.vue'
-import { useGame } from '@/game'
+import { useGame } from '@/composables/game'
 import { formatDateTime } from '@/utils'
 
 const inProgressGames = ref([])

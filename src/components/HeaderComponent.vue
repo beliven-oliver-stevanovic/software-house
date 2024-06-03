@@ -1,7 +1,7 @@
 <script setup>
 import ButtonComponent from './ButtonComponent.vue'
 import TitleComponent from './TitleComponent.vue'
-import { useGame } from '@/game'
+import { useGame } from '@/composables/game'
 
 const { exitGame } = useGame()
 </script>

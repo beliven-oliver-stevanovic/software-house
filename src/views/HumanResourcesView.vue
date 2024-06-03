@@ -7,7 +7,7 @@ import ListElement from '../components/ListElement.vue'
 import { labels } from '@/config.js'
 import NavBar from '../components/NavBar.vue'
 import HeaderComponent from '@/components/HeaderComponent.vue'
-import { useGame } from '@/game'
+import { useGame } from '@/composables/game'
 
 const gameStore = useGameStore()
 const { onHire } = useGame()
